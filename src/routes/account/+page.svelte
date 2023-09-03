@@ -1,5 +1,6 @@
 <script>
   import { onMount } from "svelte";
+  import SendEthForm from "$lib/components/SendEthForm.svelte";
 
   import {
     defaultEvmStores,
@@ -7,7 +8,6 @@
     selectedAccount,
     connected,
     chainId,
-    chainData,
   } from "svelte-web3";
 
   export let message;
@@ -68,11 +68,7 @@
           <button on:click={disconnect}>Disconnect Metamask</button>
 
           {#if value > 0 && $selectedAccount}
-            <p>
-              <button on:click={sendTip}
-                >send 0.01 tip to {tipAddress} (author)</button
-              >
-            </p>
+            <SendEthForm maxValue={value} />
           {/if}
         {/await}
       </p>

@@ -1,10 +1,9 @@
 <script>
-	import { siteTitle } from '$lib/config';
+  import { siteTitle } from "$lib/config";
 </script>
 
 <svelte:head>
-	<title>{siteTitle}</title>
+  <title>{siteTitle}</title>
 </svelte:head>
 
 <h1>Swap</h1>
-
