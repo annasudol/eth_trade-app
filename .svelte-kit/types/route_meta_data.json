@@ -1,0 +1,8 @@
+{
+	"/": [
+		"src/routes/+page.ts"
+	],
+	"/trade": [
+		"src/routes/trade/+page.ts"
+	]
+}
