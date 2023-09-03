@@ -1,41 +1,88 @@
+<script>
+  import { onMount } from "svelte";
+
+  import {
+    defaultEvmStores,
+    web3,
+    selectedAccount,
+    connected,
+    chainId,
+    chainData,
+  } from "svelte-web3";
+
+  export let message;
+  export let tipAddress;
+
+  //   const enable = () =>
+  //     defaultEvmStores.setProvider("https://sokol.poa.network");
+  const enableBrowser = () => defaultEvmStores.setBrowserProvider();
+  const disconnect = () => defaultEvmStores.disconnect();
+
+  $: checkAccount =
+    $selectedAccount || "0x0000000000000000000000000000000000000000";
+  $: balance = $connected ? $web3.eth.getBalance(checkAccount) : "";
+  const sendTip = async (e) => {
+    console.log("Received move event (sendTip button)", e);
+    const tx = await $web3.eth.sendTransaction({
+      gasPrice: $web3.utils.toHex($web3.utils.toWei("30", "gwei")),
+      gasLimit: $web3.utils.toHex("21000"),
+      from: $selectedAccount,
+      to: tipAddress,
+      value: $web3.utils.toHex($web3.utils.toWei("1", "finney")),
+    });
+    console.log("Receipt from sendTip transaction", tx);
+    alert("Thanks!");
+  };
+
+  onMount(async () => {
+    await defaultEvmStores.setProvider("https://rpc.slock.it/goerli");
+    message = "";
+  });
+</script>
+
 <svelte:head>
-	<title>Account</title>
+  <title>svelte-web3 test</title>
 </svelte:head>
 
-<h1>Account</h1>
+<div class="main">
+  {#if $web3.version}
+    <p>
+      <button on:click={enableBrowser}>connect to Metamask</button>
+    </p>
+  {/if}
+  {#if $connected}
+    <div>
+      <p>
+        Connected chain: {$chainId}
+      </p>
+      <p>
+        Selected account: {$selectedAccount || "not defined"}
+      </p>
 
-<form on:submit|preventDefault>
-	<div class="form-section">
-		<label for="name">Name</label>
-		<input type="text" id="name" placeholder="First name" />
-	</div>
+      <p>
+        Balance:
+        {#await balance}
+          <span>waiting...</span>
+        {:then value}
+          <span>{value}</span>
+          <button on:click={disconnect}>Disconnect Metamask</button>
 
-	<div class="form-section">
-		<label for="email">Email</label>
-		<input type="email" id="email" placeholder="Email address" />
-	</div>
+          {#if value > 0 && $selectedAccount}
+            <p>
+              <button on:click={sendTip}
+                >send 0.01 tip to {tipAddress} (author)</button
+              >
+            </p>
+          {/if}
+        {/await}
+      </p>
+    </div>
+  {/if}
+</div>
 
-	<fieldset>
-		<legend> Which option? </legend>
-
-		<div>
-			<input type="radio" name="s" id="s1" value="s1" />
-			<label for="s1">Option 1</label>
-		</div>
-		<div>
-			<input type="radio" name="s" id="s2" value="s2" />
-			<label for="s2">Option 2</label>
-		</div>
-		<div>
-			<input type="radio" name="s" id="s3" value="s3" />
-			<label for="s3">Option 3</label>
-		</div>
-	</fieldset>
-
-	<div class="form-section">
-		<input type="checkbox" id="c1" />
-		<label for="c1">Sign me up for something!</label>
-	</div>
-
-	<input type="submit" value="Do nothing!" />
-</form>
+<style>
+  .main {
+    display: flex;
+    justify-content: center;
+  }
+</style>
