@@ -11,28 +11,12 @@
   } from "svelte-web3";
 
   export let message;
-  export let tipAddress;
 
-  //   const enable = () =>
-  //     defaultEvmStores.setProvider("https://sokol.poa.network");
   const enableBrowser = () => defaultEvmStores.setBrowserProvider();
   const disconnect = () => defaultEvmStores.disconnect();
 
-  $: checkAccount =
-    $selectedAccount || "0x0000000000000000000000000000000000000000";
+  $: checkAccount = $selectedAccount;
   $: balance = $connected ? $web3.eth.getBalance(checkAccount) : "";
-  const sendTip = async (e) => {
-    console.log("Received move event (sendTip button)", e);
-    const tx = await $web3.eth.sendTransaction({
-      gasPrice: $web3.utils.toHex($web3.utils.toWei("30", "gwei")),
-      gasLimit: $web3.utils.toHex("21000"),
-      from: $selectedAccount,
-      to: tipAddress,
-      value: $web3.utils.toHex($web3.utils.toWei("1", "finney")),
-    });
-    console.log("Receipt from sendTip transaction", tx);
-    alert("Thanks!");
-  };
 
   onMount(async () => {
     await defaultEvmStores.setProvider("https://rpc.slock.it/goerli");
@@ -53,7 +37,7 @@
   {#if $connected}
     <div>
       <p>
-        Connected chain: {$chainId}
+        Connected chain ID: {$chainId}
       </p>
       <p>
         Selected account: {$selectedAccount || "not defined"}
