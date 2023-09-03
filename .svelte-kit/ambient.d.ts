@@ -108,6 +108,7 @@ declare module '$env/static/private' {
 	export const HOMEBREW_CELLAR: string;
 	export const npm_config_init_version: string;
 	export const npm_config_ignore_optional: string;
+	export const npm_package_dependencies_svelte_web3: string;
 	export const COLORTERM: string;
 	export const npm_node_execpath: string;
 	export const npm_config_version_tag_prefix: string;
@@ -224,6 +225,7 @@ declare module '$env/dynamic/private' {
 		HOMEBREW_CELLAR: string;
 		npm_config_init_version: string;
 		npm_config_ignore_optional: string;
+		npm_package_dependencies_svelte_web3: string;
 		COLORTERM: string;
 		npm_node_execpath: string;
 		npm_config_version_tag_prefix: string;
