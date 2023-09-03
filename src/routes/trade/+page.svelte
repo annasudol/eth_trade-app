@@ -1,9 +1,7 @@
 <script>
 	// @ts-nocheck
-
 	import { onMount } from 'svelte';
 	import { afterUpdate } from 'svelte';
-
 	import { defaultEvmStores, web3, selectedAccount, connected, chainId } from 'svelte-web3';
 
 	export let message;
@@ -14,7 +12,7 @@
 
 	let amount = 0.1;
 	let address = '0x0000000000000000000000000000000000000000';
-	let isLoading;
+	let alertMessage;
 	afterUpdate(() => {
 		amount > balance ? (amount = balance) : amount;
 		amount < 0.01 ? (amount = 0.01) : amount;
@@ -26,21 +24,25 @@
 	const handleOnSubmit = async () => {
 		let tx;
 		try {
-			isLoading = true;
+			alertMessage = 'Transaction is sending'
 			tx = await $web3.eth.sendTransaction({
 				from: '0xa5e672a0fca1dd75561a741a459d630fa640e232',
 				to: '0x0000000000000000000000000000000000000000',
 				value: 10
 			});
-			console.log(tx.blockHash, tx.transactionHash);
 		} catch (err) {
-			alert('Error with making transaction');
+			alertMessage = err.message || 'Error with making transaction'
+		} finally {
+			if(tx.blockHash, tx.transactionHash) {
+				alertMessage =`Transaction sent successfully, transactionHash: ${tx.transactionHash}`
+			}
+
 		}
 	};
 </script>
 
 <svelte:head>
-	<title>svelte-web3 test</title>
+	<title>svelte-web3 trade</title>
 </svelte:head>
 
 <div class="trade">
@@ -74,6 +76,9 @@
 						</div>
 						<button type="submit">Send</button>
 					</form>
+					{#if alertMessage} 
+						<p>{alertMessage}</p>
+					{/if}
 				{/if}
 			{/await}
 		</div>
@@ -82,7 +87,7 @@
 
 <style>
 	.trade {
-    width: 100%;
+    	width: 100%;
 		display: flex;
 		justify-content: center;
 	}
