@@ -8,13 +8,12 @@
     chainId,
   } from "svelte-web3";
 
-  import { networks } from "$lib/config"
+  import { networks } from "$lib/config";
   const enableBrowser = () => defaultEvmStores.setBrowserProvider();
   const disconnect = () => defaultEvmStores.disconnect();
   $: checkAccount = $selectedAccount;
   $: balance = $connected ? $web3.eth.getBalance(checkAccount) : "";
-  $: networkName = networks[Number($chainId)].name;
-
+  $: networkName = networks[Number($chainId)]?.name;
 </script>
 
 <svelte:head>
@@ -37,7 +36,6 @@
         {:then value}
           <span>{value} gwei</span>
           <button on:click={disconnect}>Disconnect Metamask</button>
-
         {/await}
       </div>
     </div>

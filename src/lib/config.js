@@ -15,18 +15,17 @@ export const navItems = [
   },
 ];
 
-
 export const networks = {
   5: {
-    name: 'Goerli',
-    etherscan: 'https://goerli.etherscan.io'
+    name: "Goerli",
+    etherscan: "https://goerli.etherscan.io",
   },
-    80001: {
-    name: 'Polygonscan',
-    etherscan: 'https://mumbai.polygonscan.com'
+  80001: {
+    name: "Polygonscan",
+    etherscan: "https://mumbai.polygonscan.com",
   },
-    1: {
-    name: 'Mainnet',
-    etherscan: 'https://etherscan.io/'
+  1: {
+    name: "Mainnet",
+    etherscan: "https://etherscan.io/",
   },
-}
+};
