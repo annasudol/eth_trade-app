@@ -11,8 +11,8 @@
   } from "svelte-web3";
   import { Spinner, Alert } from "flowbite-svelte";
   import { InfoCircleSolid } from "flowbite-svelte-icons";
+  import { networks } from "$lib/config";
 
-  export let message;
   const enableBrowser = () => defaultEvmStores.setBrowserProvider();
 
   $: checkAccount = $selectedAccount;
@@ -20,17 +20,17 @@
 
   let amount = 0.1;
   let address = "0x0000000000000000000000000000000000000000";
-  let alertMessage;
   let isLoading;
   let isError;
   let transactionHash;
+  $: networkEtherscan = networks[Number($chainId)]?.etherscan;
+
   afterUpdate(() => {
     amount > balance ? (amount = balance) : amount;
     amount < 1 ? (amount = 1) : amount;
   });
   onMount(async () => {
     await defaultEvmStores.setProvider("https://rpc.slock.it/goerli");
-    message = "";
   });
   const handleOnSubmit = async () => {
     let tx;
@@ -45,7 +45,6 @@
       isError = true;
       isLoading = false;
     } finally {
-      console.log(tx.transactionHash, "tx");
       if (tx?.transactionHash) {
         isLoading = false;
         transactionHash = tx.transactionHash;
@@ -55,7 +54,7 @@
 </script>
 
 <svelte:head>
-  <title>svelte-web3 trade</title>
+  <title>Eth trade</title>
 </svelte:head>
 
 <div class="trade">
@@ -104,10 +103,10 @@
           </form>
           {#if isLoading}
             <div class="flex flex-col items-center">
-              <Spinner color="yellow" />
+              <div class="mb-4"><Spinner color="yellow" /></div>
               <Alert border color="yellow">
                 <InfoCircleSolid slot="icon" class="w-4 h-4" />
-                <span class="font-medium">Transaction is sending</span>
+                <p class="font-bold">Transaction is sending</p>
                 That might take a few seconds to complete
               </Alert>
             </div>
@@ -115,15 +114,15 @@
           {#if isError}
             <Alert border color="red">
               <InfoCircleSolid slot="icon" class="w-4 h-4" />
-              <span class="font-medium">Error</span>
+              <p class="font-bold">Error</p>
               Transaction Error
             </Alert>
           {/if}
           {#if transactionHash}
             <Alert border color="green">
               <InfoCircleSolid slot="icon" class="w-4 h-4" />
-              <span class="font-medium">Success</span>
-              `Transaction sent successfully, transactionHash: ${transactionHash}`
+              <p class="font-bold">Success</p>
+              <a href={networkEtherscan + "/tx/" + transactionHash} target="_blank" rel="noopener noreferrer">View on {networkEtherscan}</a>
             </Alert>
           {/if}
         {:else}
