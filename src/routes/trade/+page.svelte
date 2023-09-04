@@ -122,7 +122,11 @@
             <Alert border color="green">
               <InfoCircleSolid slot="icon" class="w-4 h-4" />
               <p class="font-bold">Success</p>
-              <a href={networkEtherscan + "/tx/" + transactionHash} target="_blank" rel="noopener noreferrer">View on {networkEtherscan}</a>
+              <a
+                href={networkEtherscan + "/tx/" + transactionHash}
+                target="_blank"
+                rel="noopener noreferrer">View on {networkEtherscan}</a
+              >
             </Alert>
           {/if}
         {:else}
