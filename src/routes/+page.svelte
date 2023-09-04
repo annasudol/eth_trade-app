@@ -24,7 +24,7 @@
   <meta name="description" content="Svelte app" />
 </svelte:head>
 
-<section class="main">
+<section class="flex justify-center">
   {#if $web3.version}
     <button on:click={enableBrowser}>connect to Metamask</button>
   {/if}
@@ -49,10 +49,3 @@
     </div>
   {/if}
 </section>
-
-<style>
-  .main {
-    display: flex;
-    justify-content: center;
-  }
-</style>
