@@ -13,9 +13,7 @@
   const disconnect = () => defaultEvmStores.disconnect();
   $: checkAccount = $selectedAccount;
   $: balance = $connected ? $web3.eth.getBalance(checkAccount) : "";
-  $: networkName = networks[$chainId];
-  console.log(networkName, chainId, networks, 'networkName')
-  import { Alert } from "flowbite-svelte";
+  $: networkName = networks[Number($chainId)].name;
 
 </script>
 
@@ -30,12 +28,8 @@
   {/if}
   {#if $connected}
     <div>
-      <p>
-        Connected chain ID: {$chainId}
-      </p>
-      <p>
-        Selected account: {$selectedAccount || "not defined"}
-      </p>
+      <p>Connected chain ID: {$chainId}, Name: {networkName}</p>
+      <p>Selected account: {$selectedAccount || "not defined"}</p>
       <div>
         Balance:
         {#await balance}
@@ -43,7 +37,7 @@
         {:then value}
           <span>{value} gwei</span>
           <button on:click={disconnect}>Disconnect Metamask</button>
-          <Alert />
+
         {/await}
       </div>
     </div>
