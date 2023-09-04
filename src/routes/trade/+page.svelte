@@ -15,7 +15,7 @@
 	let alertMessage;
 	afterUpdate(() => {
 		amount > balance ? (amount = balance) : amount;
-		amount < 0.01 ? (amount = 0.01) : amount;
+		amount < 1 ? (amount = 1) : amount;
 	});
 	onMount(async () => {
 		await defaultEvmStores.setProvider('https://rpc.slock.it/goerli');
@@ -24,11 +24,11 @@
 	const handleOnSubmit = async () => {
 		let tx;
 		try {
-			alertMessage = 'Transaction is sending'
+			alertMessage = 'Transaction is sending';
 			tx = await $web3.eth.sendTransaction({
-				from: '0xa5e672a0fca1dd75561a741a459d630fa640e232',
-				to: '0x0000000000000000000000000000000000000000',
-				value: 10
+				from: checkAccount,
+				to: address,
+				value: amount
 			});
 		} catch (err) {
 			alertMessage = err.message || 'Error with making transaction'
@@ -57,6 +57,7 @@
 				<span>waiting...</span>
 			{:then value}
 				{#if value > 0 && $selectedAccount}
+				
 					<form on:submit|preventDefault={handleOnSubmit}>
 						<div class="form-section">
 							<label for="address">Eth address</label>
@@ -64,18 +65,21 @@
 						</div>
 
 						<div class="form-section">
-							<label for="amount">Amount</label>
+							<label for="amount">Amount in Gwei</label>
 							<input
 								type="number"
 								id="amount"
 								placeholder="2 gwei"
 								max={balance}
-								min={0.01}
+								min={1}
 								bind:value={amount}
 							/>
 						</div>
 						<button type="submit">Send</button>
 					</form>
+					{:else}
+					<p>you don't have enough money ;(</p>
+
 					{#if alertMessage} 
 						<p>{alertMessage}</p>
 					{/if}
